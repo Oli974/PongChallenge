@@ -14,7 +14,7 @@ class GameActivity:AppCompatActivity(){
         //Set no Title
         this.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-        setContentView(R.layout.game_main)
+        //  setContentView(R.layout.game_main)
     }
 
 
