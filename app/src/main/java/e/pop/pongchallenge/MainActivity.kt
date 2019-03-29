@@ -6,10 +6,12 @@ import android.os.Bundle
 
 class MainActivity : AppCompatActivity() {
 
+    var gameView:GameView?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var gameView:GameView=GameView(this)
+        gameView=GameView(this)
 
         setContentView(gameView)
     }

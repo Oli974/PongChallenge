@@ -1,22 +1,15 @@
 package Object
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 
 class Player:Personnage {
 
     var name:String?=null
+    var rectf:RectF?=null
 
     constructor(name:String):super(){
         this.name=name
     }
-
-
-
-
-
 
     /**
      * Méthodes
@@ -31,24 +24,36 @@ class Player:Personnage {
     override fun moove() {
     }
 
-    override fun moove(x:Int,y:Int) {
+    override fun moove(x:Float,y:Float) {
 
-        if((posX as Int) < x) posX= posX as Int + vitesseX as Int
-        else posX= posX as Int - vitesseX as Int
+        val dX:Float?
 
-        if((posY as Int) < y) posY= posY as Int + vitesseY as Int
-        else posY= posY as Int - vitesseY as Int
+        if((posX as Float) < x){
+            dX = x - posX as Float
+            //Si la vitesse est plus grande que la distance restante on réduit la vitesse
+            if((dX-vitesseX as Int) < 0f) vitesseX=(vitesseX as Int) - 1
+
+            posX= posX as Float + vitesseX as Int
+        }
+        else if((posX as Float) > x){
+            dX = posX as Float - x
+            if((dX-vitesseX as Int) < 0f) vitesseX=(vitesseX as Int) - 1
+            else vitesseX = 10
+
+            posX= posX as Float - vitesseX as Int
+        }
 
     }
 
-    fun draw(canvas:Canvas,x:Int,y:Int){
+    fun draw(canvas:Canvas,x:Float,y:Float){
         posX=x
         posY=y
 
-        var paint:Paint=Paint()
+        val paint=Paint()
         paint.color = Color.WHITE
 
-        var rect:Rect=Rect(x,y,x+50,y+50)
-        canvas.drawRect(rect,paint)
+
+        rectf=RectF(x,y,x+50,y+50)
+        canvas.drawRect(rectf as RectF,paint)
     }
 }

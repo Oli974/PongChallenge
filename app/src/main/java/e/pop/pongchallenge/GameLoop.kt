@@ -28,8 +28,8 @@ class GameLoop : Thread {
 
     override fun run() {
 
-        var startTime:Long ?= null
-        var sleepTime:Long ?= null
+        var startTime:Long
+        var sleepTime:Long
 
         while(running){
             startTime= System.currentTimeMillis()
@@ -39,7 +39,7 @@ class GameLoop : Thread {
             var c:Canvas?=null
             try {
                 c = view?.holder?.lockCanvas()
-                synchronized(view?.holder as Any) { view?.draw(c)}
+                synchronized(view?.holder as Any) { view?.drawScreen(c as Canvas)}
             }finally {
                 if(c!=null) view?.holder?.unlockCanvasAndPost(c)
             }

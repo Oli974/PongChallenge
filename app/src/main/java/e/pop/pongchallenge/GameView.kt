@@ -11,10 +11,11 @@ import android.view.MotionEvent
 
 class GameView:SurfaceView,SurfaceHolder.Callback {
 
-    var joueur:Player?=null
-    var loop:GameLoop?=null
-    var newPosX:Int?=null
-    var newPosY:Int?=null
+    private var joueur:Player?=null
+    private var loop:GameLoop?=null
+    private var newPosX:Float?=null
+    private var newPosY:Float?=null
+   // private var Score:Int?=null
 
     constructor(context:Context) : super(context){
         holder.addCallback(this)
@@ -26,20 +27,34 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
     /**
      * Dessine l'écran de jeu
      */
-    fun drawScreen(canvas: Canvas) : Unit{
-        if(canvas == null) return
-
+    fun drawScreen(canvas: Canvas){
         canvas.drawColor(Color.BLACK)
 
-        joueur?.draw(canvas,20,20)
+        joueur?.draw(canvas,joueur?.posX as Float,joueur?.posY as Float)
     }
 
     /**
      * Mise à jour du déplacement des objets (Appelés par la boucle Principale)
      */
     fun update(){
-        joueur?.moove(newPosX ?: joueur?.posX as Int,newPosY ?: joueur?.posY as Int)
+
+        val newX = newPosX ?: joueur?.posX
+        val newY = newPosY ?: joueur?.posY
+
+        joueur?.moove(newX as Float,newY as Float)
     }
+
+    /**
+     * Génération d'ennemis
+     */
+    /*
+    fun randomEnnemiesGenerate(){
+        var wave:Array<Ennemis>?=null
+
+
+
+    }
+    */
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
         if(loop?.state == Thread.State.TERMINATED){
@@ -56,7 +71,7 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
 
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
-        var retry:Boolean = true
+        var retry= true
         while(retry){
             try{
                 loop?.join()
@@ -66,8 +81,10 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        newPosX = event?.getX() as Int?
-        newPosY = event?.getY() as Int?
+
+        newPosX = event?.getX()
+        newPosY = event?.getY()
+
         return true
     }
 

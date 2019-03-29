@@ -16,8 +16,8 @@ abstract class Personnage {
         /*
          Position selon les axes x et y
          */
-        var posX:Int?=null
-        var posY:Int?=null
+        var posX:Float?=null
+        var posY:Float?=null
 
         /*
         Vitesse de déplacement selon les coordonnées x et y
@@ -39,6 +39,9 @@ abstract class Personnage {
         pv = 100
         attack = 15
         level = 1
+
+        posX=10f
+        posY=10f
 
         vitesseX=10
         vitesseY=10
@@ -65,11 +68,11 @@ abstract class Personnage {
         hEcran = hScreen
 
         // on définit (au choix) la taille de la balle à 1/5ème de la largeur de l'écran
-        var width:Int = wScreen / 5
-        var height:Int = wScreen / 5
+       // var width:Int = wScreen / 5
+       // var height:Int = wScreen / 5
     }
 
     abstract fun moove()
-    abstract fun moove(x:Int,y:Int)
+    abstract fun moove(x:Float,y:Float)
     abstract fun attack()
 }
