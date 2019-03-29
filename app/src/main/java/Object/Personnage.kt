@@ -12,7 +12,7 @@ abstract class Personnage {
         var pv:Int?= null
         var attack:Int?= null
         var level:Int?= null
-
+        var isAlive:Boolean?=null
         /*
          Position selon les axes x et y
          */
@@ -40,20 +40,27 @@ abstract class Personnage {
         attack = 15
         level = 1
 
-        posX=10f
+        posX=5f
         posY=10f
 
-        vitesseX=10
+        vitesseX=20
         vitesseY=10
+
+        isAlive=true
     }
 
     constructor(level: Int){
         pv = 100 + level*25
         attack = 15 + level*5
         this.level= level
+        isAlive=true
 
-        vitesseX=10
+        posX=5f
+        posY=12f
+
+        vitesseX=20
         vitesseY=10
+
     }
 
     /**
