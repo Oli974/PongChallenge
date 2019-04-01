@@ -7,4 +7,44 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+
+    <TextView
+            android:text="@string/geometry_war"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/label"
+            android:textSize="50sp"
+            android:textAlignment="center"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/new_game"/>
+
+
+    <Button
+            android:text="@string/nouvelle_partie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_game"
+            android:onClick="onClickEvent"
+
+            app:layout_constraintTop_toBottomOf="@id/label"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tableau_scores"/>
+    <Button
+            android:text="@string/tableau_scores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tableau_scores"
+            android:onClick="onClickEvent"
+
+            app:layout_constraintTop_toBottomOf="@id/new_game"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
 </android.support.constraint.ConstraintLayout>

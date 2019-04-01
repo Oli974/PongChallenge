@@ -1,11 +1,12 @@
 package e.pop.pongchallenge
 
+import android.content.Intent
 import android.graphics.Canvas
 
 class GameLoop : Thread {
 
     var view:GameView?=null
-
+    var pause:Boolean?=null
 
     /**
      * Gestion du frameRate
@@ -20,6 +21,7 @@ class GameLoop : Thread {
 
     constructor(view:GameView):super(){
         this.view=view
+        pause=false
     }
 
     fun setRunning(boolean: Boolean){
@@ -35,11 +37,15 @@ class GameLoop : Thread {
             startTime= System.currentTimeMillis()
 
             synchronized(view?.holder as Any) { view?.update() } //Mise à jour des déplacements
+            if(pause as Boolean){
+                synchronized(this){
 
+                }
+            }
             var c:Canvas?=null
             try {
                 c = view?.holder?.lockCanvas()
-                synchronized(view?.holder as Any) { view?.drawScreen(c as Canvas)}
+                synchronized(view?.holder as Any) { view?.draw(c as Canvas)}
             }finally {
                 if(c!=null) view?.holder?.unlockCanvasAndPost(c)
             }
@@ -51,7 +57,10 @@ class GameLoop : Thread {
 
             }
         }
-
     }
 
+
+    fun isRunning():Boolean{
+        return running
+    }
 }

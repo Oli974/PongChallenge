@@ -1,29 +1,42 @@
 package e.pop.pongchallenge
 
 import android.content.Context
-import android.view.SurfaceHolder
-import android.view.SurfaceView
 
 import Object.*
 import android.graphics.Canvas
 import android.graphics.Color
-import android.view.MotionEvent
+import android.util.AttributeSet
+import android.view.*
+import android.widget.Button
+import android.widget.TextView
 import kotlin.random.Random
 
-class GameView:SurfaceView,SurfaceHolder.Callback {
+class GameView:SurfaceView,SurfaceHolder.Callback{
 
-    private var joueur:Player?=null
-    private var loop:GameLoop?=null
+    var joueur:Player?=null
+
+    var txtView:TextView?=null
+
+    //Boucle de Jeu
+    var loop:GameLoop?=null
+
+    //Les nouvelles positions que doivent atteindre le joueur : Position où on a touché l'écran pour la dernière fois
     private var newPosX:Float?=null
     private var newPosY:Float?=null
-    private var score:Int?=null
+
+    //Variable qui gère le score
+    var score:Int?=null
+
+    //Position d'origine en X
     private val ORIGIN_X = 10
+
+    //Tableau d'Ennemis dans lequel on instancie nos ennemis
     var wave:Array<Ennemis>?=null
 
+    //Largeur et hauteur de l'écran
     var wScreen:Int?= null
     var hScreen:Int?= null
 
-    var ennemi:Ennemis?= null
 
     constructor(context:Context) : super(context){
         holder.addCallback(this)
@@ -34,13 +47,44 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
 
         wave = Array(5,init = {i -> generateEnnemis(Random.nextFloat())})
 
+        txtView = findViewById(R.id.score)
+
+        score=0
     }
+
+    constructor(context:Context,attrs:AttributeSet) : super(context,attrs){
+        holder.addCallback(this)
+        loop=GameLoop(this)
+
+        joueur = Player("Bob")
+        joueur?.projectiles?.add(Projectiles(joueur?.posX as Float, joueur?.posY as Float))
+
+        wave = Array(5,init = {i -> generateEnnemis(Random.nextFloat())})
+
+        score=0
+        txtView = findViewById(R.id.score)
+    }
+
+    constructor(context:Context,attrs:AttributeSet,defStyleAttr:Int) : super(context,attrs,defStyleAttr){
+        holder.addCallback(this)
+        loop=GameLoop(this)
+
+        joueur = Player("Bob")
+        joueur?.projectiles?.add(Projectiles(joueur?.posX as Float, joueur?.posY as Float))
+
+        wave = Array(5,init = {i -> generateEnnemis(Random.nextFloat())})
+        txtView = findViewById(R.id.score)
+        score=0
+    }
+
 
     /**
      * Dessine l'écran de jeu
      */
-    fun drawScreen(canvas: Canvas){
+    override fun draw(canvas: Canvas){
+        super.draw(canvas)
         canvas.drawColor(Color.BLACK)
+
         joueur?.draw(canvas,joueur?.posX as Float,(hScreen as Int - 150f))
 
         for(i in joueur?.projectiles as ArrayList){
@@ -48,12 +92,16 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
         }
 
 
-        for(i in 0 until (wave?.size as Int)){
-            var posX= wave?.get(i)?.posX
-            var posY= wave?.get(i)?.posY
+        for(i in 0 until (wave?.size as Int)) {
+            if (wave?.get(i)?.isAlive as Boolean) {
+                val posX = wave?.get(i)?.posX
+                val posY = wave?.get(i)?.posY
 
-            wave?.get(i)?.draw(canvas,posX as Float,posY as Float)
+                wave?.get(i)?.draw(canvas, posX as Float, posY as Float)
+            }
         }
+
+        txtView?.text = "Score : "+score
     }
 
     /**
@@ -68,58 +116,79 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
         /*
         On génère une position en x aléatoire où va apparaitre l'ennemi
          */
-
         for(i in 0 until (wave?.size as Int)){
-            var randomPosX = (Random.nextFloat()*(wScreen as Int))
             val tailleZone:Float = (wScreen as Int)/5 - 0f
 
+
+            /*
+            Défini la position de l'ennemi dans la vague qui arrive
+             */
             val posX:Float = (ORIGIN_X+tailleZone/3) + i*tailleZone
             /*
-                Vérifie si un ennemi est toujours en vie
+                Vérifie si un ennemi est toujours en vie et est sur l'écran
                 Si c'est le cas on le fait bouger
                 Sinon on en génére un nouveau
              */
-            if( wave?.get(i)?.isAlive as Boolean) wave?.get(i)?.moove()
+            if( wave?.get(i)?.isAlive as Boolean && wave?.get(i)?.isOnScreen as Boolean) {
+                wave?.get(i)?.moove()
+                if(collision(wave?.get(i) as Ennemis, joueur as Player)){
+                    joueur?.pv = joueur?.pv as Int - 25
+                }
+            }
             else{
                 wave?.set(i,generateEnnemis(posX))
             }
 
             /*
-            Si un ennemi quitte l'écran on le considère comme mort
+            Si un ennemi quitte l'écran on le considère comme sorti
+            Si ses pv sont inférieures à zéro on le considère comme mort et on augmente le score
              */
-            if((wave?.get(i)?.posY as Float) > hScreen as Int){
+            if((wave?.get(i)?.posY as Float) > hScreen as Int) wave?.get(i)?.isOnScreen = false
+            if(wave?.get(i)?.pv as Int <= 0){
                 wave?.get(i)?.isAlive = false
+                score = score as Int + wave?.get(i)?.valueEnnemis as Int
             }
         }
 
         /*
-        Déplacement et ajout de nouveaux projectiles
+        Déplacement des projectiles
          */
         if(!(joueur?.projectiles?.isEmpty() as Boolean)) {
             for (i in 0 until joueur?.projectiles?.size as Int) {
-                var current = joueur?.projectiles?.get(i)
+                val current = joueur?.projectiles?.get(i)
                 current?.move()
+
+                for(j in 0 until wave?.size as Int){
+                    if(collisionProj( wave?.get(j) as Personnage,joueur?.projectiles?.get(i) as Projectiles)){
+                        wave?.get(j)?.pv =  wave?.get(j)?.pv as Int - joueur?.attack as Int
+                    }
+                }
                 if(!(current?.isActivate as Boolean)) joueur?.projectiles?.set(i,Projectiles(joueur?.posX as Float, joueur?.posY as Float))
             }
 
         }
 
-        if((joueur?.projectiles?.size as Int) < 10)
-                joueur?.projectiles?.add(Projectiles(joueur?.posX as Float, joueur?.posY as Float))
+        /*
+        Ajout des projectiles
+         */
+        if((joueur?.projectiles?.size as Int) < 30)
+            joueur?.projectiles?.add(Projectiles(joueur?.posX as Float, joueur?.posY as Float))
 
         /*
         Arrêt du jeu si le joueur meurt
          */
-        if(joueur?.pv ==0) loop?.setRunning(false)
+        if(joueur?.pv == 0) {
+            loop?.setRunning(false)
+        }
     }
 
     /**
      * Génération d'ennemis
      */
     fun generateEnnemis(posEnnemi:Float):Ennemis{
-        var levelEnnemis = 1
+        val levelEnnemis = 1
 
-        var newEnnemi=Ennemis(levelEnnemis)
+        val newEnnemi=Ennemis(levelEnnemis,1)
 
         newEnnemi.posX=posEnnemi
 
@@ -136,7 +205,35 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
         return newEnnemi
     }
 
+    /**
+     * Vérifie si l'objet x entre en collision avec l'objet y :=> Ici pour le joueur et les ennemis
+     */
+    private fun collision(x:Personnage?,y:Personnage?):Boolean {
+        if(x !=null && y != null) {
+            return(y.posX as Float >= x.posX as Float
+                    && (y.posX as Float) < (x.posX as Float + (x.width ?: 50))
+                    && (y.posY as Float) >= (x.posY as Float)
+                    && (y.posY as Float) < (x.posY as Float + (x.height ?: 50)))
+        }
+        else return false
+    }
 
+    /**
+     * Vérifie si un projectile entre en collision avec le personnage
+     */
+    private fun collisionProj(x:Personnage?,y:Projectiles?):Boolean {
+        if(x !=null && y != null) {
+            return(y.posX as Float >= x.posX as Float
+                    && (y.posX as Float) < (x.posX as Float + (x.width ?: 50))
+                    && (y.posY as Float) >= (x.posY as Float)
+                    && (y.posY as Float) < (x.posY as Float + (x.height ?: 50)))
+        }
+        else return false
+    }
+
+    /**
+     * Methode de la SurfaceView
+     */
     override fun surfaceCreated(holder: SurfaceHolder?) {
         if(loop?.state == Thread.State.TERMINATED) {
             loop = GameLoop(this)
@@ -144,6 +241,8 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
 
         loop?.setRunning(true)
         loop?.start()
+
+
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
@@ -151,8 +250,11 @@ class GameView:SurfaceView,SurfaceHolder.Callback {
         wScreen=width
 
         joueur?.resize(width,height)
-    }
 
+        for(i in 0 until wave?.size as Int){
+            wave?.get(i)?.resize(width,height)
+        }
+    }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
         var retry= true

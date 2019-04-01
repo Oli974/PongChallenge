@@ -5,9 +5,18 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 
-class Ennemis(level:Int):Personnage(level){
+class Ennemis:Personnage{
 
     var rectf:RectF?=null
+    var isOnScreen:Boolean?=null
+    var typeEnnemi:Int?=null
+    var valueEnnemis:Int?=null
+
+    constructor(level:Int,type:Int):super(level){
+        isOnScreen=true
+        typeEnnemi=type
+        valueEnnemis=50*type
+    }
 
     override fun attack() {
     }
@@ -27,7 +36,7 @@ class Ennemis(level:Int):Personnage(level){
         paint.color = Color.WHITE
 
 
-        rectf= RectF(x,y,x+50,y+50)
+        rectf= RectF(x,y,x+(width ?: 50),y+(height?:50))
         canvas.drawRect(rectf as RectF,paint)
     }
 }

@@ -31,7 +31,6 @@ class Player:Personnage {
 
     override fun moove(x:Float,y:Float) {
         posX = x
-        posY = y
     }
 
     fun draw(canvas:Canvas,x:Float,y:Float){
@@ -41,7 +40,7 @@ class Player:Personnage {
         val paint=Paint()
         paint.color = Color.WHITE
 
-        rectf=RectF(x,y,x+50,y+50)
+        rectf=RectF(x,y,x+(width as Int),y+(height as Int))
         canvas.drawRect(rectf as RectF,paint)
     }
 }

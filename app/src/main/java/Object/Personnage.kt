@@ -13,6 +13,8 @@ abstract class Personnage {
         var attack:Int?= null
         var level:Int?= null
         var isAlive:Boolean?=null
+        var width:Int?=null
+        var height:Int?=null
         /*
          Position selon les axes x et y
          */
@@ -75,8 +77,8 @@ abstract class Personnage {
         hEcran = hScreen
 
         // on définit (au choix) la taille de la balle à 1/5ème de la largeur de l'écran
-       // var width:Int = wScreen / 5
-       // var height:Int = wScreen / 5
+        width = wScreen / 20
+        height = wScreen / 20
     }
 
     abstract fun moove()

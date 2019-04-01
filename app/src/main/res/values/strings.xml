@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PongChallenge</string>
+    <string name="pause">Pause</string>
+    <string name="nouvelle_partie">Nouvelle Partie</string>
+    <string name="tableau_scores">Tableau des Scores</string>
+    <string name="geometry_war">Geometry War</string>
+    <string name="Score">Score : </string>
+    <string name="nom_joueur">Nom du joueur</string>
+    <string name="Delete">Supprimer</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>
