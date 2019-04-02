@@ -3,12 +3,14 @@ package e.pop.pongchallenge
 import android.content.Context
 
 import Object.*
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
+import kotlinx.android.synthetic.main.score_activity.view.*
 import kotlin.random.Random
 
 class GameView:SurfaceView,SurfaceHolder.Callback{
@@ -19,6 +21,7 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
 
     //Boucle de Jeu
     var loop:GameLoop?=null
+    var isRunning:Boolean?= null
 
     //Les nouvelles positions que doivent atteindre le joueur : Position où on a touché l'écran pour la dernière fois
     private var newPosX:Float?=null
@@ -38,9 +41,9 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
     var hScreen:Int?= null
 
 
-    constructor(context:Context) : super(context){
+    constructor(context:Context,loop: GameLoop) : super(context){
         holder.addCallback(this)
-        loop=GameLoop(this)
+        this.loop=loop
 
         joueur = Player("Bob")
         joueur?.projectiles?.add(Projectiles(joueur?.posX as Float, joueur?.posY as Float))
@@ -49,6 +52,7 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
 
         txtView = findViewById(R.id.score)
 
+        isRunning=false
         score=0
     }
 
@@ -62,6 +66,7 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
         wave = Array(5,init = {i -> generateEnnemis(Random.nextFloat())})
 
         score=0
+        isRunning=false
         txtView = findViewById(R.id.score)
     }
 
@@ -72,6 +77,7 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
         joueur = Player("Bob")
         joueur?.projectiles?.add(Projectiles(joueur?.posX as Float, joueur?.posY as Float))
 
+        isRunning=false
         wave = Array(5,init = {i -> generateEnnemis(Random.nextFloat())})
         txtView = findViewById(R.id.score)
         score=0
@@ -112,7 +118,6 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
         val newY = newPosY ?: joueur?.posY
 
         joueur?.moove(newX as Float,newY as Float)
-
         /*
         On génère une position en x aléatoire où va apparaitre l'ennemi
          */
@@ -178,7 +183,13 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
         Arrêt du jeu si le joueur meurt
          */
         if(joueur?.pv == 0) {
+            isRunning=false
             loop?.setRunning(false)
+
+            val intent = Intent(context,listActivity::class.java)
+            intent.putExtra("Add",true)
+            intent.putExtra("score",score)
+            context?.startActivity(intent)
         }
     }
 
@@ -240,6 +251,7 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
         }
 
         loop?.setRunning(true)
+        isRunning=true
         loop?.start()
 
 
@@ -273,6 +285,5 @@ class GameView:SurfaceView,SurfaceHolder.Callback{
 
         return true
     }
-
 
 }

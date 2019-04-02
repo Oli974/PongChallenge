@@ -14,12 +14,14 @@ class AddActivity :AppCompatActivity(){
     var nomEditText:EditText?=null
     var score:Int?=null
 
+    val NOMJOUEUR = "nomJoueur"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.add_score)
 
-        score = intent.getIntExtra("score",0)
+        score = intent.getIntExtra("Score",0)
         nomEditText=findViewById(R.id.nouveauJoueur)
     }
 
@@ -27,25 +29,15 @@ class AddActivity :AppCompatActivity(){
 
         when(v.id){
             R.id.ok -> {
-                val intent:Intent = Intent(this,listActivity::class.java)
-                intent.putExtra("nomJoueur",nomEditText?.text)
+                val intent = Intent(this,listActivity::class.java)
+                intent.putExtra(NOMJOUEUR,nomEditText?.text)
                 intent.putExtra("score",score)
                 intent.putExtra("isScore",true)
                 try{
-                    startActivity(intent)
+                    setResult(Activity.RESULT_OK,intent)
+                    finish()
                 }catch (e:ActivityNotFoundException){}
             }
-            R.id.Cancel -> {
-                val intent:Intent = Intent(this,listActivity::class.java)
-                intent.putExtra("nomJoueur","Guest")
-                intent.putExtra("score",score)
-                intent.putExtra("isScore",true)
-                try{
-                    startActivity(intent)
-                }catch (e:ActivityNotFoundException){}
-            }
-
-
         }
 
     }

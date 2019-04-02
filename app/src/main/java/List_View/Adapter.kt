@@ -29,8 +29,6 @@ class Adapter:ArrayAdapter<Score>{
         val nomPersonnage:TextView = cellView.findViewById(R.id.nom_joueur)
         val score:TextView = cellView.findViewById(R.id.score)
         val date:TextView = cellView.findViewById(R.id.date)
-        val id:TextView = cellView.findViewById(R.id.id)
-
 
         val s:Score? = getItem(position)
 

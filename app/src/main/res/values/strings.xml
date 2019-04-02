@@ -9,4 +9,6 @@
     <string name="Delete">Supprimer</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="menu_add">add</string>
+    <string name="menu_quit">Quit</string>
 </resources>

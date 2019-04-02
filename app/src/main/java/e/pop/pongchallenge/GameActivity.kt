@@ -5,23 +5,18 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.*
 import android.widget.*
-import android.content.Intent
-import android.graphics.Canvas
 
 class GameActivity:AppCompatActivity(){
 
     private var btPause:Button?= null
     private var scoreView:TextView?=null
+
     private var gameView:GameView?=null
+    private var gameLoop:GameLoop?=null
+
     private var score:Int?=null
 
     private var nomJoueur:String?=null
-
-    /**
-     * Gestion du frameRate
-     */
-    val IPS:Int=30
-    val IPMS:Int= 1000/IPS // 1000ms/30
 
     override fun onCreate(savedInstanceState : Bundle?){
         super.onCreate(savedInstanceState)
@@ -34,6 +29,8 @@ class GameActivity:AppCompatActivity(){
         setContentView(R.layout.game_activity)
 
         gameView = findViewById(R.id.gameView)
+        gameLoop= GameLoop(gameView as GameView)
+        gameView?.loop = gameLoop
 
         btPause = findViewById(R.id.bt_Pause)
         scoreView = findViewById(R.id.score)
@@ -41,7 +38,6 @@ class GameActivity:AppCompatActivity(){
         score = gameView?.score
 
         scoreView?.setTextColor(Color.WHITE)
-
 
     }
 
@@ -55,11 +51,6 @@ class GameActivity:AppCompatActivity(){
     }
     */
 
-    override fun onStart() {
-        super.onStart()
-
-    }
-
     override fun onPause() {
         gameView?.loop?.setRunning(false)
         score = gameView?.score
@@ -70,11 +61,6 @@ class GameActivity:AppCompatActivity(){
     override fun onDestroy() {
         gameView?.loop?.setRunning(false)
         score = gameView?.score
-
-        val intent = Intent(this,AddActivity::class.java)
-        intent.putExtra("score",score)
-        intent.putExtra("nomJoueur",this.nomJoueur)
-        startActivity(intent)
 
         super.onDestroy()
     }

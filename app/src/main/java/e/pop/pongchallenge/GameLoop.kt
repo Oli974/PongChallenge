@@ -1,6 +1,5 @@
 package e.pop.pongchallenge
 
-import android.content.Intent
 import android.graphics.Canvas
 
 class GameLoop : Thread {
@@ -11,8 +10,8 @@ class GameLoop : Thread {
     /**
      * Gestion du frameRate
      */
-    val IPS:Int=30
-    val IPMS:Int= 1000/IPS // 1000ms/30
+    private val IPS:Int=30
+    private val IPMS:Int= 1000/IPS // 1000ms/30
 
     /**
      * Gestion du Thread
