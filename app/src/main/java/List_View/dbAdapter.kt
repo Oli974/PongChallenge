@@ -82,17 +82,18 @@ class dbAdapter{
 
         println("-- Recupération des scores --")
 
-        c.moveToFirst()
+        if(!c.isBeforeFirst) c.move(-1)
         while(c.moveToNext()){
 
             /*
             Ajout d'un nouveau score au tableau
                 Format : id + nomJoueur + Score + Date
              */
-            scores.add(Score(c.getLong(0),c.getString(1),
-                    c.getInt(2),c.getString(3)))
 
-            println("Récupération :  ${c.getString(1)} ${c.getString(3)} ${c.getString(2)} ")
+            scores.add(Score(id = c.getLong(0),nom = c.getString(1),
+                    score = c.getInt(3),date = c.getString(2)))
+
+            println("Récupération :  ${c.getString(1)} ${c.getString(2)} ${c.getString(3)} ")
         }
         c.close()
         return scores

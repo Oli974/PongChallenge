@@ -26,15 +26,19 @@ class Adapter:ArrayAdapter<Score>{
             cellView = inflater?.inflate(R.layout.cell_layout, parent, false) as View
         }
 
-        val nomPersonnage:TextView = cellView.findViewById(R.id.nom_joueur)
-        val score:TextView = cellView.findViewById(R.id.score)
-        val date:TextView = cellView.findViewById(R.id.date)
+        val nomView:TextView = cellView.findViewById(R.id.nom_joueur)
+        val scoreView:TextView = cellView.findViewById(R.id.score)
+        val dateView:TextView = cellView.findViewById(R.id.date)
 
         val s:Score? = getItem(position)
 
-        nomPersonnage.text = "Nom Joueur : "+s?.getNom()
-        score.text = "Score : "+s?.getScore().toString()
-        date.text = "Date : "+s?.getdate()
+        val nom = "Nom Joueur : ${s?.getNom()}"
+        val score = "Score : "+s?.getScore().toString()
+        val date = "Date : "+s?.getdate()
+
+        nomView.text = nom
+        scoreView.text = score
+        dateView.text = date
 
         return cellView
     }

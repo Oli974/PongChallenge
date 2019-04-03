@@ -5,26 +5,29 @@
                                              android:layout_height="match_parent">
 
     <TextView
-            android:text="@string/nom_joueur"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView"
+            android:id="@+id/scoreTotal"
+
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/nouveauJoueur"/>
+
+
 
     <EditText
             android:layout_width="wrap_content"
             android:inputType="text"
             android:layout_height="wrap_content"
             android:id="@+id/nouveauJoueur"
-            app:layout_constraintTop_toBottomOf="@id/textView"
+
+            app:layout_constraintTop_toBottomOf="@id/scoreTotal"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/textView"
+            app:layout_constraintLeft_toLeftOf="parent"
+
             app:layout_constraintBottom_toTopOf="@id/ok"
-            android:hint="@string/nom_joueur" app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="120dp"/>
+            android:hint="@string/nom_joueur"/>
     <Button
             android:text="@string/ok"
             android:layout_width="wrap_content"
@@ -32,11 +35,10 @@
             android:onClick="OnClickEvent"
             android:id="@+id/ok"
 
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nouveauJoueur"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" android:layout_marginStart="172dp"/>
+            app:layout_constraintLeft_toLeftOf="@id/nouveauJoueur"
+            app:layout_constraintRight_toRightOf="@id/nouveauJoueur" android:layout_marginStart="172dp"/>
 
 
 </android.support.constraint.ConstraintLayout>

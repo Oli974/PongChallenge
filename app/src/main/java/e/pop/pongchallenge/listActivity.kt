@@ -7,15 +7,12 @@ import Object.*
 import android.app.Activity
 import android.os.Bundle
 import android.content.Intent
-import android.os.SystemClock
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -28,8 +25,6 @@ class listActivity : AppCompatActivity() {
 
     private val add = 0
 
-    var ArrayTest:ArrayList<Score> = arrayListOf(Score(0,"jean",12,"bob"))
-
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.score_activity)
@@ -39,8 +34,10 @@ class listActivity : AppCompatActivity() {
 
         if(intent.getBooleanExtra("Add",false)){
             val score = intent.getIntExtra("score",0)
+
             val intent = Intent(this,AddActivity::class.java)
             intent.putExtra("Score",score)
+
             startActivityForResult(intent,add)
         }
 
@@ -51,40 +48,6 @@ class listActivity : AppCompatActivity() {
         adapter= Adapter(this,scoresTab)
         listView?.adapter=adapter
     }
-
-    /**
-     *
-     *
-     */
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_add -> {
-                val intent = Intent(this, AddActivity::class.java)
-                intent.putExtra("titre", "")
-                intent.putExtra("priorite", -1)
-                intent.putExtra("position", -1)
-                startActivityForResult(intent, add)
-                return true
-            }
-            R.id.action_quit -> {
-                finish()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-    /**
-     *
-     *
-     *
-     */
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
@@ -112,21 +75,27 @@ class listActivity : AppCompatActivity() {
             when(resultCode){
                 Activity.RESULT_OK -> {
                     val score = intent.getIntExtra("score",0)
-                    val nomJoueur = intent.getStringExtra("nomJoueur")
-                    val nom = intent?.extras?.get("nomJoueur")
+                    var nomjoueur = data?.getStringExtra("nomJoueur")
 
-                    println(nomJoueur+" "+score)
+                    if(nomjoueur?.isBlank() as Boolean){
+                        nomjoueur="guest"
+                    }
+
                     val formatter = SimpleDateFormat.getDateInstance()
                     val dt = Date()
-                    val dt_str = formatter.format(dt)
+                    val dtStr = formatter.format(dt)
 
-                    val id:Long = db_adapter?.insertScore(nomJoueur ?: "guest",dt_str,score) as Long
-                    println("Insertion du score avec l'id : $id")
+                    val id:Long = db_adapter?.insertScore(nomjoueur,dtStr,score) as Long
+
+                    println("Insertion du score avec l'id : $id nom : $nomjoueur score : $score date : $dtStr")
+
                     adapter?.add(db_adapter?.getScore(id))
+                    finish()
                 }
 
-
-
+                Activity.RESULT_CANCELED -> {
+                    finish()
+                }
             }
         }
     }

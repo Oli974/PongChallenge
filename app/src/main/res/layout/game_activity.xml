@@ -6,6 +6,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:theme="@style/AppTheme.NoActionBar"
+        android:keepScreenOn="true"
+        android:background="@mipmap/bg"
         tools:context=".MainActivity">
 
     <e.pop.pongchallenge.GameView
@@ -19,7 +21,6 @@
             android:background="@drawable/flatdark13"
             android:onClick="setPause"
 
-            app:layout_constraintRight_toLeftOf="@id/score"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
     />
@@ -31,7 +32,6 @@
 
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/bt_Pause"
     />
 
 </android.support.constraint.ConstraintLayout>

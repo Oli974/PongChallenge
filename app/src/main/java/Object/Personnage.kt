@@ -13,8 +13,7 @@ abstract class Personnage {
         var attack:Int?= null
         var level:Int?= null
         var isAlive:Boolean?=null
-        var width:Int?=null
-        var height:Int?=null
+
         /*
          Position selon les axes x et y
          */
@@ -33,6 +32,9 @@ abstract class Personnage {
 
     var wEcran:Int?=null
     var hEcran:Int?=null
+
+    var width:Int?=null
+    var height:Int?=null
 
     /**
       *Constructeur employé lors de la première création du personnage

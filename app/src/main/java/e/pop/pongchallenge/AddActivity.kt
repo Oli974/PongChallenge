@@ -8,11 +8,14 @@ import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 
 class AddActivity :AppCompatActivity(){
 
     var nomEditText:EditText?=null
+    var scoreView : TextView?= null
     var score:Int?=null
+    var nomJoueur:String?=null
 
     val NOMJOUEUR = "nomJoueur"
 
@@ -21,24 +24,34 @@ class AddActivity :AppCompatActivity(){
 
         setContentView(R.layout.add_score)
 
-        score = intent.getIntExtra("Score",0)
+        scoreView= findViewById(R.id.scoreTotal)
+
+        scoreView?.text = "Score Final : ${intent.getIntExtra("Score",0)}"
+
         nomEditText=findViewById(R.id.nouveauJoueur)
+
     }
 
     fun OnClickEvent(v: View){
-
         when(v.id){
             R.id.ok -> {
                 val intent = Intent(this,listActivity::class.java)
-                intent.putExtra(NOMJOUEUR,nomEditText?.text)
-                intent.putExtra("score",score)
-                intent.putExtra("isScore",true)
+
+                nomJoueur = nomEditText?.text?.toString()
+
+                intent.putExtra(NOMJOUEUR,nomJoueur)
+
                 try{
                     setResult(Activity.RESULT_OK,intent)
                     finish()
                 }catch (e:ActivityNotFoundException){}
             }
-        }
+            else -> {
 
+                try{
+                    setResult(Activity.RESULT_CANCELED)
+                }catch (e:ActivityNotFoundException){}
+            }
+        }
     }
 }

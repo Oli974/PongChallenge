@@ -35,6 +35,12 @@ class GameLoop : Thread {
         while(running){
             startTime= System.currentTimeMillis()
 
+            if(pause as Boolean){
+                while(pause as Boolean){
+                    Thread.sleep(200)
+                }
+            }
+
             synchronized(view?.holder as Any) { view?.update() } //Mise à jour des déplacements
             if(pause as Boolean){
                 synchronized(this){
@@ -56,6 +62,10 @@ class GameLoop : Thread {
 
             }
         }
+    }
+
+    fun setPause(){
+        pause = !(pause as Boolean)
     }
 
 
